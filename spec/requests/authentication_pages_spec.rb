@@ -18,7 +18,7 @@ describe "Authentication" do
 			before { click_button "Sign in" }
 
 			it { should have_selector('title', text: 'Sign in') }
-			it { should have_selector('div.alert.alert-error', text: 'Invalid') }
+			it { should have_error_message('Invalid') }
 			
 			describe "after visiting another page" do
 				before { click_link "Home" }
@@ -29,12 +29,8 @@ describe "Authentication" do
 
 		describe "with valid credentials" do
 			let (:user) { FactoryGirl.create(:user) }
-
-			before do
-				fill_in "Email", with: user.email
-				fill_in "Password", with: user.password
-				click_button "Sign in"
-			end
+			# valid_signin is a helper method -> utilities.rb
+			before { valid_signin(user) }
 
 			it { should have_selector('title', text: user.name) }
 			it { should have_link('Profile', href: user_path(user)) }
