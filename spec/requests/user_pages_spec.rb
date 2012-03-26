@@ -12,7 +12,7 @@ describe "User pages" do
 	end
 
 	describe "profile page" do
-		let (:user) { FactoryGirl. create(:user) }
+		let (:user) { FactoryGirl.create(:user) }
 		before { visit user_path(user) }
 
 		it { should have_selector('h1', text: user.name) }
@@ -54,6 +54,7 @@ describe "User pages" do
 
 				it { should have_selector('title', text: user.name) }
 				it { should have_selector('div.alert.alert-success', text: 'Welcome') }
+				it { should have_link('Sign out') }
 			end
 
 		end
