@@ -144,7 +144,6 @@ describe "Authentication" do
 				# users should never even try to edit another user's profile
 				specify { response.should redirect_to(root_path) }
 			end
-
 		end
 
 		describe "as non-admin user" do

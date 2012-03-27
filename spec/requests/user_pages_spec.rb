@@ -68,6 +68,10 @@ describe "User pages" do
 				it "should be able to delete another user" do
 					expect { click_link('delete') }.to change(User, :count).by(-1)
 				end
+
+				it "should not show delete links for another user's microposts" do
+					expect { click_link('delete') }.to change(User, :count).by(-1)
+				end
 				
 				it { should_not have_link('delete', href: user_path(admin)) }
 			end

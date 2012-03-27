@@ -22,6 +22,7 @@ describe "Static pages" do
 
 		describe "for signed-in user" do
 			let (:user) { FactoryGirl.create(:user) }
+			let (:non_owned_micropost) { FactoryGirl.create(:micropost, user: FactoryGirl.create(:user), content: "Non owned") }
 			before do
 				FactoryGirl.create(:micropost, user: user, content: "Lorem psum")
 				FactoryGirl.create(:micropost, user: user, content: "Dolore sit amet")
@@ -33,6 +34,10 @@ describe "Static pages" do
 				user.feed.each do |item|
 					page.should have_selector("li##{item.id}", content: item.content)
 				end
+			end
+
+			describe "should not show delete links for non-owned microposts" do
+				it {should_not have_link("delete", href: microposts_path(non_owned_micropost))}
 			end
 		end
 	end
