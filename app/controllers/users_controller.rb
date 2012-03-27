@@ -14,17 +14,24 @@ class UsersController < ApplicationController
 	end
 
 	def new
+		redirect_to(root_path) unless !signed_in?
+
 		@user = User.new
+		
 	end
 
 	def create
-		@user = User.new(params[:user])
-		if @user.save
-			sign_in @user
-			flash[:success] = "Welcome to the Sample App!"
-			redirect_to @user
+		if !signed_in?
+			@user = User.new(params[:user])
+			if @user.save
+				sign_in @user
+				flash[:success] = "Welcome to the Sample App!"
+				redirect_to @user
+			else
+				render 'new'
+			end
 		else
-			render 'new'
+			redirect_to(root_path)
 		end
 	end
 
