@@ -19,6 +19,8 @@ describe "Authentication" do
 
 			it { should have_selector('title', text: 'Sign in') }
 			it { should have_error_message('Invalid') }
+			it { should_not have_link('Profile') }
+			it { should_not have_link('Settings') }
 			
 			describe "after visiting another page" do
 				before { click_link "Home" }
@@ -44,6 +46,16 @@ describe "Authentication" do
 			describe "followed by signout" do
 				before { click_link "Sign out" }
 				it { should have_link('Sign in') }
+			end
+
+			describe "visiting Users#new page" do
+				before { visit signup_path }
+				it { should have_selector('title', text: full_title('')) }
+			end
+
+			describe "submitting a POST request to Users#create action" do
+				before { post users_path(user) }
+				specify { response.should redirect_to(root_path) }
 			end
 
 		end
@@ -76,15 +88,21 @@ describe "Authentication" do
 			describe "when attempting to visit a protected page" do
 				before do
 					visit edit_user_path(user)
-					fill_in "Email", with: user.email
-					fill_in "Password", with: user.password
-					click_button "Sign in"
+					fill_sign_in user
 				end
 
 				describe "after signing in" do
 
 					it "should render the desired protected page" do
 						page.should have_selector('title', text: 'Edit user')
+					end
+
+					describe "when signing in again" do
+						before { sign_in user }
+
+						it "should render the default (profile) page" do
+							page.should have_selector('title', text: user.name) 
+						end
 					end
 				end
 			end
@@ -96,7 +114,7 @@ describe "Authentication" do
 			let(:wrong_user) { FactoryGirl.create(:user, email: "wrong@example.com") }
 			before { sign_in user }
 
-			describe "visiting Users#edit_page" do
+			describe "visiting Users#edit page" do
 				before { visit edit_user_path(wrong_user) }
 				# Should redirect to the homepage because
 				# users should never even try to edit another user's profile

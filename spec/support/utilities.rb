@@ -7,7 +7,7 @@ def full_title(page_title)
 	end
 end
 
-def valid_signin(user)
+def fill_sign_in(user)
 	fill_in "Email", 	with: user.email
 	fill_in "Password", with: user.password
 	click_button "Sign in"
@@ -18,7 +18,7 @@ def valid_user_update(user)
 	fill_in "Name", 	with: new_name
 	fill_in "Email", 	with: new_email
 	fill_in "Password", with: user.password
-	fill_in "Confirmation", with: user.password
+	fill_in "Confirm Password", with: user.password
 	click_button "Save changes"
 end
 
